@@ -2,7 +2,7 @@
 
 **Effortlessly upload and fetch files to Telegram 🚀**
 
----
+## Made using [deno](https://deno.land/), [hono](https://hono.dev/), [mtkruto](https://mtkruto.deno.dev/) and [denokv](https://deno.land/x/denokv).
 
 1. **Clone The Repository**
 
