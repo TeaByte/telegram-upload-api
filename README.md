@@ -53,4 +53,20 @@
 
 ---
 
-Feel free to contribute by opening issues or submitting pull requests.
+## APIs and Usage
+
+The Telegram Upload API provides the following endpoints:
+
+## 1. Upload Endpoint
+
+- **Endpoint**: `/upload`
+- **Method**: `POST`
+- **Parameters**:
+  - `file`: The file to be uploaded (multipart form data)
+
+### 2. Fetch Endpoint
+
+- **Endpoint**: `/get`
+- **Method**: `POST`
+- **Parameters**:
+  - `recordId`: The unique identifier for the file record

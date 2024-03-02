@@ -1,4 +1,5 @@
 {
+  "lock": false,
   "tasks": {
     "start": "deno run -A --unstable server.ts",
     "dev": "deno run -A --watch --unstable server.ts",
