@@ -2,7 +2,7 @@
 
 **Effortlessly upload and fetch files to Telegram 🚀**
 
-## Made using [deno](https://deno.land/), [hono](https://hono.dev/), [mtkruto](https://mtkruto.deno.dev/) and [denokv](https://deno.land/x/denokv).
+- Made using [deno](https://deno.land/), [hono](https://hono.dev/), [mtkruto](https://mtkruto.deno.dev/) and [denokv](https://deno.com/kv).
 
 1. **Clone The Repository**
 
@@ -11,9 +11,9 @@
    cd telegram-upload-api
    ```
 
-2. **Setup Localhost DenvKV**
+2. **Setup Localhost DenoKV**
 
-   Use the following Docker command to mounts a local folder into the container to store the database, and it hosts a denoKV Connect endpoint at `http://localhost:4512` with an access of `234xs266623t`.
+   Use the following Docker command to mounts a local folder into the container to store the database, and it hosts a denoKV Connect endpoint at `http://localhost:4512` with an access token `234xs266623t`.
 
    ```sh
    docker run -it --init -p 4512:4512 -v ./data:/data ghcr.io/denoland/denokv --sqlite-path /data/denokv.sqlite serve --access-token 234xs266623t
@@ -21,7 +21,7 @@
 
 3. **Edit The config.json File**
 
-   In the config.json file, update the following fields with your Telegram credentials and bot information:
+   In the `config.json` file, update the following fields with your Telegram credentials and bot information:
 
    ```json
    {
