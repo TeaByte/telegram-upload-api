@@ -4,6 +4,8 @@
 
 - Made using [deno](https://deno.land/), [hono](https://hono.dev/), [mtkruto](https://mtkruto.deno.dev/) and [denokv](https://deno.com/kv).
 
+---
+
 1. **Clone The Repository**
 
    ```sh
@@ -37,7 +39,7 @@
 
    - Replace `your_api_id` and `your_api_hash` with your Telegram credentials from https://my.telegram.org/auth.
    - Obtain a bot token from [@BotFather](https://t.me/BotFather) and replace `your_bot_token`.
-   - `chatId` is the ID of a Telegram group where files will be saved.
+   - `chatId` is the ID of a Telegram group where files will be saved ( You can get it from [@WhatChatIDBot](https://t.me/WhatChatIDBot) ).
 
 4. **Start The Server**
 
@@ -57,7 +59,7 @@
 
 The Telegram Upload API provides the following endpoints:
 
-## 1. Upload Endpoint
+### 1. Upload Endpoint
 
 - **Endpoint**: `/upload`
 - **Method**: `POST`
@@ -66,7 +68,7 @@ The Telegram Upload API provides the following endpoints:
 
 ### 2. Fetch Endpoint
 
-- **Endpoint**: `/get`
+- **Endpoint**: `/fetch`
 - **Method**: `POST`
 - **Parameters**:
   - `recordId`: The unique identifier for the file record

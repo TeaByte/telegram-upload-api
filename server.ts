@@ -1,7 +1,7 @@
 import { Hono, Context } from "https://deno.land/x/hono@v4.0.8/mod.ts";
 
 import * as db from "./database.ts";
-import { getFromTelegram, uploadToTelegram } from "./telegram.ts";
+import { fetchFromTelegram, uploadToTelegram } from "./telegram.ts";
 import { saveToSystem, deleteFromSystem } from "./system.ts";
 import config from "./config.ts";
 
@@ -53,7 +53,7 @@ app.post("/upload", async (c: Context) => {
   }
 });
 
-app.post("/get", async (c: Context) => {
+app.post("/fetch", async (c: Context) => {
   const body = await c.req.json();
   const recordId = body["recordId"];
   if (recordId) {
@@ -67,7 +67,10 @@ app.post("/get", async (c: Context) => {
           404
         );
       }
-      const path = await getFromTelegram(dbData["fileId"], dbData["fileName"]);
+      const path = await fetchFromTelegram(
+        dbData["fileId"],
+        dbData["fileName"]
+      );
       const file = await Deno.readFile(path);
       await deleteFromSystem(path);
       return c.body(file.buffer, 200, {

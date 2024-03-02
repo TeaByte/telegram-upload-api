@@ -18,18 +18,18 @@ Deno.test("Upload Test", async () => {
   assertEquals(uploadResponse.status, 200);
   console.log("Upload Response: ", result);
 
-  const getResponse = await axiod.post(`http://localhost:${port}/get`, {
+  const fetchResponse = await axiod.post(`http://localhost:${port}/fetch`, {
     recordId: result["recordId"],
   });
 
-  assertEquals(getResponse.data, "Hello, World!");
-  assertEquals(getResponse.status, 200);
-  console.log(getResponse.data);
+  assertEquals(fetchResponse.data, "Hello, World!");
+  assertEquals(fetchResponse.status, 200);
+  console.log(fetchResponse.data);
 });
 
-Deno.test("Get Non-Existent File Test", async () => {
+Deno.test("Fetch Non-Existent File Test", async () => {
   await axiod
-    .post(`http://localhost:${port}/get`, {
+    .post(`http://localhost:${port}/fetch`, {
       recordId: "i-don't-exist",
     })
     .catch((e) => {
