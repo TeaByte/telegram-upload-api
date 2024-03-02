@@ -1,6 +1,6 @@
 {
-  "apiId": 1,
-  "apiHash": 1,
+  "apiId": "your_api_id",
+  "apiHash": "your_api_hash",
   "chatId": -1002036530000,
   "botToken": "your_bot_token",
   "serverPort": 8080,
