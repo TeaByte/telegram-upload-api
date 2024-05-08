@@ -1,4 +1,5 @@
 import { Hono, Context } from "hono";
+import { cuid } from "cuid";
 
 import config from "./utils/config.ts";
 import { uploadToTelegram, fetchFromTelegram } from "./utils/telegram.ts";
@@ -19,9 +20,9 @@ app.post("/upload", async (c: Context) => {
     return errorResponse(c, "File size is too large or empty");
   }
 
+  const arrayBuffer = await file.arrayBuffer();
+  const savedPath = await saveToSystem(arrayBuffer, file.name);
   try {
-    const arrayBuffer = await file.arrayBuffer();
-    const savedPath = await saveToSystem(arrayBuffer, file.name);
     const fileId = await uploadToTelegram(savedPath);
     await deleteFromSystem(savedPath);
 
@@ -35,6 +36,7 @@ app.post("/upload", async (c: Context) => {
     );
   } catch (error) {
     console.error(error);
+    await deleteFromSystem(savedPath);
     return errorResponse(c, "Failed to upload the file");
   }
 });
@@ -43,15 +45,17 @@ app.post("/fetch", async (c: Context) => {
   const body = await c.req.json();
   const fileId = body["fileId"];
 
+  const fileName = cuid();
+  const path = `./temp/${cuid()}`;
+
   if (!(fileId && typeof fileId == "string")) {
     return errorResponse(c, "FileId is missing");
   }
 
   try {
-    const [path, fileName] = await fetchFromTelegram(fileId);
+    await fetchFromTelegram(fileId, path);
     const file = await Deno.readFile(path);
     await deleteFromSystem(path);
-
     return c.body(file.buffer, 200, {
       "Content-Type": "application/octet-stream",
       "Content-Disposition": `attachment; filename="${fileName}"`,

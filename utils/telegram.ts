@@ -1,7 +1,8 @@
 import { Client, StorageLocalStorage } from "mtkruto";
-import { cuid } from "cuid";
 
 import config from "./config.ts";
+
+import { deleteFromSystem } from "./system.ts";
 
 export const client = new Client(
   new StorageLocalStorage("client"),
@@ -29,9 +30,7 @@ export async function uploadToTelegram(path: string) {
   return file.document.fileId;
 }
 
-export async function fetchFromTelegram(fileId: string) {
-  const fileName = cuid();
-  const path = `./temp/${cuid()}`;
+export async function fetchFromTelegram(fileId: string, path: string) {
   const outFile = await Deno.open(path, {
     write: true,
     create: true,
@@ -44,9 +43,9 @@ export async function fetchFromTelegram(fileId: string) {
     })) {
       await Deno.write(outFile.rid, chunk);
     }
+  } catch {
+    await deleteFromSystem(path);
   } finally {
     await Deno.close(outFile.rid);
   }
-
-  return [path, fileName];
 }
