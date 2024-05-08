@@ -1,8 +1,5 @@
-import {
-  Client,
-  StorageLocalStorage,
-} from "https://deno.land/x/mtkruto@0.1.155/mod.ts";
-import { cuid } from "https://deno.land/x/cuid/index.js";
+import { Client, StorageLocalStorage } from "mtkruto";
+import { cuid } from "cuid";
 
 import config from "./config.ts";
 

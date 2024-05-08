@@ -1,5 +1,5 @@
 export async function saveToSystem(
-  buffer: Uint8Array,
+  arrayBuffer: ArrayBuffer,
   fileName: string
 ): Promise<string> {
   const path = `./temp/${fileName}`;
@@ -8,7 +8,7 @@ export async function saveToSystem(
     create: true,
     truncate: true,
   });
-  await file.write(buffer);
+  await file.write(new Uint8Array(arrayBuffer));
   await file.close();
   return path;
 }

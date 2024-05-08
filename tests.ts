@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.218.0/assert/mod.ts";
 import axiod from "https://deno.land/x/axiod@0.26.0/mod.ts";
-import config from "./config.ts";
+import config from "./utils/config.ts";
 
 const port = config["serverPort"];
 
