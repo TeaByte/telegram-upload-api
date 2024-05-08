@@ -8,6 +8,6 @@
   "imports": {
     "hono": "https://deno.land/x/hono@v4.0.8/mod.ts",
     "mtkruto": "https://deno.land/x/mtkruto@0.1.155/mod.ts",
-    "cuid": "https://deno.land/x/cuid@v1.0.0"
+    "cuid": "https://deno.land/x/cuid@v1.0.0/index.js"
   }
 }
