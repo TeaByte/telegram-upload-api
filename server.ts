@@ -4,6 +4,9 @@ import { uploadToTelegram, fetchFromTelegram } from "./telegram.ts";
 import { saveToSystem, deleteFromSystem } from "./system.ts";
 import config from "./config.ts";
 
+import { isSizeAcceptable } from "./utils/checkers.ts";
+import { errorResponse } from "./utils/messages.ts";
+
 const app = new Hono();
 
 app.post("/upload", async (c: Context) => {
@@ -11,13 +14,8 @@ app.post("/upload", async (c: Context) => {
   const file = body["file"];
   if (file instanceof File) {
     try {
-      if (file.size === 0 || file.size > 2000000000) {
-        return c.json(
-          {
-            message: "File size is too large or empty",
-          },
-          400
-        );
+      if (!isSizeAcceptable(file.size)) {
+        return errorResponse(c, "File size is too large or empty");
       }
       const savedPath = await saveToSystem(
         new Uint8Array(await file.arrayBuffer()),
@@ -35,27 +33,17 @@ app.post("/upload", async (c: Context) => {
       );
     } catch (error) {
       console.error(error);
-      return c.json(
-        {
-          message: "Failed to upload the file",
-        },
-        500
-      );
+      return errorResponse(c, "Failed to upload the file");
     }
   } else {
-    return c.json(
-      {
-        message: "Missing or invalid file",
-      },
-      400
-    );
+    return errorResponse(c, "Missing or invalid file");
   }
 });
 
 app.post("/fetch", async (c: Context) => {
   const body = await c.req.json();
   const fileId = body["fileId"];
-  if (fileId) {
+  if (fileId && typeof fileId == "string") {
     try {
       const [path, fileName] = await fetchFromTelegram(fileId);
       const file = await Deno.readFile(path);
@@ -66,20 +54,10 @@ app.post("/fetch", async (c: Context) => {
       });
     } catch (error) {
       console.error(error);
-      return c.json(
-        {
-          message: "Failed to download the file",
-        },
-        500
-      );
+      return errorResponse(c, "Failed to download the file");
     }
   } else {
-    return c.json(
-      {
-        message: "File ID is required",
-      },
-      400
-    );
+    return errorResponse(c, "FileId is missing");
   }
 });
 
