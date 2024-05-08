@@ -30,7 +30,10 @@ app.post("/upload", async (c: Context) => {
       {
         message: "File uploaded successfully",
         fileId,
-        file,
+        file: {
+          size: file.size,
+          name: file.name,
+        },
       },
       200
     );

@@ -13,15 +13,7 @@
    cd telegram-upload-api
    ```
 
-2. **Setup Localhost DenoKV**
-
-   Use the following Docker command to mounts a local folder into the container to store the database, and it hosts a denoKV Connect endpoint at `http://localhost:4512` with an access token `234xs266623t`.
-
-   ```sh
-   docker run -it --init -p 4512:4512 -v ./data:/data ghcr.io/denoland/denokv --sqlite-path /data/denokv.sqlite serve --access-token 234xs266623t
-   ```
-
-3. **Edit The config.json File**
+2. **Edit The config.json File**
 
    In the `config.json` file, update the following fields with your Telegram credentials and bot information:
 
@@ -31,9 +23,7 @@
      "apiHash": "your_api_hash",
      "chatId": -1002036530000,
      "botToken": "your_bot_token",
-     "serverPort": 8080,
-     "denoKV": "http://localhost:4512/",
-     "kvToken": "234xs266623t"
+     "serverPort": 8080
    }
    ```
 
@@ -41,13 +31,13 @@
    - Obtain a bot token from [@BotFather](https://t.me/BotFather) and replace `your_bot_token`.
    - `chatId` is the ID of a Telegram group where files will be saved ( You can get it from [@WhatChatIDBot](https://t.me/WhatChatIDBot) ).
 
-4. **Start The Server**
+3. **Start The Server**
 
    ```sh
    deno task start
    ```
 
-5. **Test The Server Endpoints**
+4. **Test The Server Endpoints**
 
    ```sh
    deno task test
@@ -71,4 +61,4 @@ The Telegram Upload API provides the following endpoints:
 - **Endpoint**: `/fetch`
 - **Method**: `POST`
 - **Parameters**:
-  - `recordId`: The unique identifier for the file record
+  - `fileId`: The unique identifier for the file record
