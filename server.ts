@@ -1,7 +1,6 @@
 import { Hono, Context } from "https://deno.land/x/hono@v4.0.8/mod.ts";
 
-import * as db from "./database.ts";
-import { fetchFromTelegram, uploadToTelegram } from "./telegram.ts";
+import { uploadToTelegram, fetchFromTelegram } from "./telegram.ts";
 import { saveToSystem, deleteFromSystem } from "./system.ts";
 import config from "./config.ts";
 
@@ -26,11 +25,11 @@ app.post("/upload", async (c: Context) => {
       );
       const fileId = await uploadToTelegram(savedPath);
       await deleteFromSystem(savedPath);
-      const recordId = await db.set(file.name, fileId, file.size);
       return c.json(
         {
           message: "File uploaded successfully",
-          recordId,
+          fileId,
+          file,
         },
         200
       );
@@ -55,27 +54,15 @@ app.post("/upload", async (c: Context) => {
 
 app.post("/fetch", async (c: Context) => {
   const body = await c.req.json();
-  const recordId = body["recordId"];
-  if (recordId) {
+  const fileId = body["fileId"];
+  if (fileId) {
     try {
-      const dbData = await db.get(recordId);
-      if (!dbData) {
-        return c.json(
-          {
-            message: "File not found",
-          },
-          404
-        );
-      }
-      const path = await fetchFromTelegram(
-        dbData["fileId"],
-        dbData["fileName"]
-      );
+      const [path, fileName] = await fetchFromTelegram(fileId);
       const file = await Deno.readFile(path);
       await deleteFromSystem(path);
       return c.body(file.buffer, 200, {
         "Content-Type": "application/octet-stream",
-        "Content-Disposition": `attachment; filename="${dbData["fileName"]}"`,
+        "Content-Disposition": `attachment; filename="${fileName}"`,
       });
     } catch (error) {
       console.error(error);

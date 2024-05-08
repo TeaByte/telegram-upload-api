@@ -2,6 +2,7 @@ import {
   Client,
   StorageLocalStorage,
 } from "https://deno.land/x/mtkruto@0.1.155/mod.ts";
+import { cuid } from "https://deno.land/x/cuid/index.js";
 
 import config from "./config.ts";
 
@@ -31,13 +32,15 @@ export async function uploadToTelegram(path: string) {
   return file.document.fileId;
 }
 
-export async function fetchFromTelegram(fileId: string, fileName: string) {
-  const path = `./temp/${fileName}`;
+export async function fetchFromTelegram(fileId: string) {
+  const fileName = cuid();
+  const path = `./temp/${cuid()}`;
   const outFile = await Deno.open(path, {
     write: true,
     create: true,
     truncate: true,
   });
+
   try {
     for await (const chunk of client.download(fileId, {
       chunkSize: 256 * 1024,
@@ -47,5 +50,6 @@ export async function fetchFromTelegram(fileId: string, fileName: string) {
   } finally {
     await Deno.close(outFile.rid);
   }
-  return path;
+
+  return [path, fileName];
 }

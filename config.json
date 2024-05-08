@@ -3,7 +3,5 @@
   "apiHash": "your_api_hash",
   "chatId": -1002036530000,
   "botToken": "your_bot_token",
-  "serverPort": 8080,
-  "denoKV": "http://localhost:4512/",
-  "kvToken": "234xs266623t"
+  "serverPort": 8080
 }
