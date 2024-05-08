@@ -47,9 +47,10 @@ app.post("/upload", async (c: Context) => {
 app.post("/fetch", async (c: Context) => {
   const body = await c.req.json();
   const fileId = body["fileId"];
+  const mainFileName = body["mainFileName"];
 
-  const fileName = cuid();
-  const path = `./temp/${cuid()}`;
+  const tempName = cuid();
+  const path = `./temp/${tempName}`;
 
   if (!(fileId && typeof fileId == "string")) {
     return errorResponse(c, "FileId is missing");
@@ -61,7 +62,9 @@ app.post("/fetch", async (c: Context) => {
     await deleteFromSystem(path);
     return c.body(file.buffer, 200, {
       "Content-Type": "application/octet-stream",
-      "Content-Disposition": `attachment; filename="${fileName}"`,
+      "Content-Disposition": `attachment; filename="${
+        mainFileName || tempName
+      }"`,
     });
   } catch (error) {
     console.error(error);
