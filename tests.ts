@@ -19,7 +19,7 @@ Deno.test("Upload Test", async () => {
   console.log("Upload Response: ", result);
 
   const fetchResponse = await axiod.post(`http://localhost:${port}/fetch`, {
-    recordId: result["recordId"],
+    fileId: result["fileId"],
   });
 
   assertEquals(fetchResponse.data, "Hello, World!");
@@ -30,11 +30,11 @@ Deno.test("Upload Test", async () => {
 Deno.test("Fetch Non-Existent File Test", async () => {
   await axiod
     .post(`http://localhost:${port}/fetch`, {
-      recordId: "i-don't-exist",
+      fileId: "i-don't-exist",
     })
     .catch((e) => {
-      assertEquals(e.response.data["message"], "File not found");
-      assertEquals(e.response.status, 404);
+      assertEquals(e.response.data["message"], "Failed to download the file");
+      assertEquals(e.response.status, 400);
       console.log(e.response.data);
     });
 });
