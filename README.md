@@ -1,6 +1,6 @@
 # Telegram Upload API
 
-**Effortlessly upload and fetch files to Telegram 🚀**
+**Effortlessly upload and fetch files from Telegram 🚀**
 
 - Made using [deno](https://deno.land/), [hono](https://hono.dev/) and [mtkruto](https://mtkruto.deno.dev/).
 
@@ -86,7 +86,7 @@ curl -X POST -F "file=@/path/to/file.txt" http://localhost:8080/upload
 #### Example
 
 ```sh
-curl http://localhost:8080/fetch?fileId=your_file_id
+curl http://localhost:8080/fetch?fileId=the_file_id
 ```
 
 #### Response
