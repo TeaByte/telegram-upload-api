@@ -41,10 +41,9 @@ app.post("/upload", async (c: Context) => {
   }
 });
 
-app.post("/fetch", async (c: Context) => {
-  const body = await c.req.json();
-  const fileId = body["fileId"];
-  const mainFileName = body["mainFileName"];
+app.get("/fetch", async (c: Context) => {
+  const fileId = c.req.query("fileId");
+  const mainFileName = c.req.query("mainFileName");
 
   const tempName = cuid();
 

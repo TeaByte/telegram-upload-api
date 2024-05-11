@@ -56,9 +56,41 @@ The Telegram Upload API provides the following endpoints:
 - **Parameters**:
   - `file`: The file to be uploaded (multipart form data)
 
+#### Example
+
+```sh
+curl -X POST -F "file=@/path/to/file.txt" http://localhost:8080/upload
+```
+
+#### Response
+
+```json
+{
+  "message": "File uploaded successfully",
+  "fileId": "the_file_id",
+  "file": {
+    "size": 12345,
+    "name": "file.txt"
+  }
+}
+```
+
 ### 2. Fetch Endpoint
 
 - **Endpoint**: `/fetch`
-- **Method**: `POST`
+- **Method**: `GET`
 - **Parameters**:
   - `fileId`: The unique identifier for the file record
+  - `mainFileName` (Optional): The name to use when downloading the file
+
+#### Example
+
+```sh
+curl http://localhost:8080/fetch?fileId=your_file_id
+```
+
+#### Response
+
+```
+The file content is streamed back as a download.
+```
