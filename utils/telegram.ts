@@ -1,8 +1,5 @@
 import { Client, StorageLocalStorage } from "mtkruto";
-
 import config from "./config.ts";
-
-import { deleteFromSystem } from "./system.ts";
 
 export const client = new Client(
   new StorageLocalStorage("client"),
@@ -25,27 +22,26 @@ try {
   Deno.exit(1);
 }
 
-export async function uploadToTelegram(path: string) {
-  const file = await client.sendDocument(config["chatId"], path);
+export async function uploadToTelegram(uint8Array: Uint8Array) {
+  const file = await client.sendDocument(config["chatId"], uint8Array);
   return file.document.fileId;
 }
 
-export async function fetchFromTelegram(fileId: string, path: string) {
-  const outFile = await Deno.open(path, {
-    write: true,
-    create: true,
-    truncate: true,
-  });
-
+export async function fetchFromTelegram(fileId: string): Promise<Uint8Array> {
+  const chunks: Uint8Array[] = [];
   try {
     for await (const chunk of client.download(fileId, {
       chunkSize: 256 * 1024,
     })) {
-      await Deno.write(outFile.rid, chunk);
+      chunks.push(chunk);
     }
+    return chunks.reduce((acc, chunk) => {
+      const newAcc = new Uint8Array(acc.length + chunk.length);
+      newAcc.set(acc, 0);
+      newAcc.set(chunk, acc.length);
+      return newAcc;
+    }, new Uint8Array());
   } catch {
-    await deleteFromSystem(path);
-  } finally {
-    await Deno.close(outFile.rid);
+    throw new Error("Error fetching from Telegram");
   }
 }

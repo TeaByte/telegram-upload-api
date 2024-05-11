@@ -3,7 +3,6 @@ import { cuid } from "cuid";
 
 import config from "./utils/config.ts";
 import { uploadToTelegram, fetchFromTelegram } from "./utils/telegram.ts";
-import { saveToSystem, deleteFromSystem } from "./utils/system.ts";
 import { isSizeAcceptable } from "./utils/checkers.ts";
 import { errorResponse } from "./utils/messages.ts";
 
@@ -21,11 +20,10 @@ app.post("/upload", async (c: Context) => {
   }
 
   const arrayBuffer = await file.arrayBuffer();
-  const savedPath = await saveToSystem(arrayBuffer, file.name);
-  try {
-    const fileId = await uploadToTelegram(savedPath);
-    await deleteFromSystem(savedPath);
+  const uint8Array = new Uint8Array(arrayBuffer);
 
+  try {
+    const fileId = await uploadToTelegram(uint8Array);
     return c.json(
       {
         message: "File uploaded successfully",
@@ -39,7 +37,6 @@ app.post("/upload", async (c: Context) => {
     );
   } catch (error) {
     console.error(error);
-    await deleteFromSystem(savedPath);
     return errorResponse(c, "Failed to upload the file");
   }
 });
@@ -50,18 +47,17 @@ app.post("/fetch", async (c: Context) => {
   const mainFileName = body["mainFileName"];
 
   const tempName = cuid();
-  const path = `./temp/${tempName}`;
 
   if (!(fileId && typeof fileId == "string")) {
     return errorResponse(c, "FileId is missing");
   }
 
   try {
-    await fetchFromTelegram(fileId, path);
-    const file = await Deno.readFile(path);
-    await deleteFromSystem(path);
-    return c.body(file.buffer, 200, {
+    const fileData = await fetchFromTelegram(fileId);
+    const contentLength = fileData.length;
+    return c.body(fileData, 200, {
       "Content-Type": "application/octet-stream",
+      "Content-Length": contentLength.toString(),
       "Content-Disposition": `attachment; filename="${
         mainFileName || tempName
       }"`,
