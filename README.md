@@ -19,11 +19,11 @@
 
    ```json
    {
-     "apiId": "your_api_id",
-     "apiHash": "your_api_hash",
-     "chatId": -1002036530000,
-     "botToken": "your_bot_token",
-     "serverPort": 8080
+   "apiId": 143...,
+   "apiHash": "bd4fed...",
+   "chatId": -10021442...,
+   "botToken": "1234585269:AAGL9o....",
+   "serverPort": 8080
    }
    ```
 

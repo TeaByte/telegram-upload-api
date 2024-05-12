@@ -3,7 +3,7 @@ import config from "./config.ts";
 
 export const client = new Client(
   new StorageLocalStorage("client"),
-  parseInt(config["apiId"]),
+  config["apiId"],
   config["apiHash"]
 );
 
