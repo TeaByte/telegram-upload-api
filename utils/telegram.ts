@@ -7,23 +7,17 @@ export const client = new Client(
   config["apiHash"]
 );
 
-await client.start(config["botToken"]).catch((error) => {
+const onError = (error: unknown) => {
   console.error("Failed to start client", error);
   Deno.exit(1);
-});
+};
 
-try {
-  const me = await client.getMe();
-  console.log(`Runing as ${me.username}`);
-} catch {
-  console.error(
-    "Failed to fetch bot info. make sure the bot token is valid and apiId and apiHash are correct"
-  );
-  Deno.exit(1);
-}
+await client.start(config["botToken"]).catch(onError);
+const me = await client.getMe().catch(onError);
+console.log(`Runing as ${me.username}`);
 
-export async function uploadToTelegram(uint8Array: Uint8Array) {
-  const file = await client.sendDocument(config["chatId"], uint8Array);
+export async function uploadToTelegram(fileContent: Uint8Array) {
+  const file = await client.sendDocument(config["chatId"], fileContent);
   return file.document.fileId;
 }
 

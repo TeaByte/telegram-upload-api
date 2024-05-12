@@ -3,7 +3,6 @@ import { cuid } from "cuid";
 
 import config from "./utils/config.ts";
 import { uploadToTelegram, fetchFromTelegram } from "./utils/telegram.ts";
-import { isSizeAcceptable } from "./utils/checkers.ts";
 import { errorResponse } from "./utils/messages.ts";
 
 const app = new Hono();
@@ -15,15 +14,13 @@ app.post("/upload", async (c: Context) => {
   if (!(file instanceof File)) {
     return errorResponse(c, "Missing or invalid file");
   }
-  if (!isSizeAcceptable(file.size)) {
+  if (!(file.size && file.size <= 2000000000)) {
     return errorResponse(c, "File size is too large or empty");
   }
 
-  const arrayBuffer = await file.arrayBuffer();
-  const uint8Array = new Uint8Array(arrayBuffer);
-
+  const fileContent = new Uint8Array(await file.arrayBuffer());
   try {
-    const fileId = await uploadToTelegram(uint8Array);
+    const fileId = await uploadToTelegram(fileContent);
     return c.json(
       {
         message: "File uploaded successfully",
@@ -44,7 +41,6 @@ app.post("/upload", async (c: Context) => {
 app.get("/fetch", async (c: Context) => {
   const fileId = c.req.query("fileId");
   const mainFileName = c.req.query("mainFileName");
-
   const tempName = cuid();
 
   if (!(fileId && typeof fileId == "string")) {
