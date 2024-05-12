@@ -57,11 +57,7 @@ app.get("/fetch", async (c: Context) => {
       }"`,
     });
   } catch (error) {
-    if (error instanceof DOMException) {
-      // Failed to decode base64 but works fine, idk. i will just ignore it for now
-    } else {
-      console.error(error);
-    }
+    console.error(error);
     return errorResponse(c, "Failed to download the file");
   }
 });

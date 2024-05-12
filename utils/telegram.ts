@@ -1,7 +1,8 @@
-import { Client } from "mtkruto";
+import { Client, StorageLocalStorage } from "mtkruto";
 import config from "./config.ts";
 
 export const client = new Client({
+  storage: new StorageLocalStorage("myclient"),
   apiHash: config.apiHash,
   apiId: config.apiId,
 });
