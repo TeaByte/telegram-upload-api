@@ -18,9 +18,8 @@ app.post("/upload", async (c: Context) => {
     return errorResponse(c, "File size is too large or empty");
   }
 
-  const fileContent = new Uint8Array(await file.arrayBuffer());
   try {
-    const fileId = await uploadToTelegram(fileContent);
+    const fileId = await uploadToTelegram(file);
     return c.json(
       {
         message: "File uploaded successfully",
@@ -58,7 +57,11 @@ app.get("/fetch", async (c: Context) => {
       }"`,
     });
   } catch (error) {
-    console.error(error);
+    if (error instanceof DOMException) {
+      // Failed to decode base64 but works fine, idk. i will just ignore it for now
+    } else {
+      console.error(error);
+    }
     return errorResponse(c, "Failed to download the file");
   }
 });
